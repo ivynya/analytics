@@ -2,12 +2,14 @@
 import { Application, Router } from "./deps.ts";
 
 const app = new Application();
-const router = new Router();
-router
-	.get("/", ctx => ctx.response.body = "Hello World!")
+const api = new Router({ prefix: "/api/v1/:id" });
 
-app.use(router.routes());
-app.use(router.allowedMethods());
+api
+	.get("/", ctx => ctx.response.body = ctx.params.id)
+	.post("/", ctx => ctx.response.body = ctx.params.id);
+
+app.use(api.routes());
+app.use(api.allowedMethods());
 
 console.log("[EVT] Listening http://localhost:8000");
 await app.listen({ port: 8000 });
