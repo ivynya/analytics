@@ -5,7 +5,7 @@ import { getPage } from "./notion/getPage.ts";
 import { updatePage } from "./notion/updatePage.ts";
 
 const app = new Application();
-const api = new Router({ prefix: "/api/v1/campaign/:id" });
+const api = new Router({ prefix: "/v1/campaign/:id" });
 
 const db = await queryDatabase();
 const buffer: { [id: string]: number } = {};
