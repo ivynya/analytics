@@ -1,17 +1,31 @@
 
+import { getPage } from "./getPage.ts";
+
 function genVisit(num: number) {
-	return { "properties": { "Visits": { "number": num } } };
+	return { "properties": {
+		"Visits": { "number": num } }
+	};
 }
 
 function genRefVisit(num: number, refNum: number) {
-	return { "properties": {
-		"Vists": { "number": num },
-		"RefVisits": { "number": refNum }
-	} };
+	return {
+		"properties": {
+			"Visits": { "number": num },
+			"RefVisits": { "number": refNum }
+		}
+	};
 }
 
-export async function updatePage(page: any, num: number, ref = false) {
+export async function updatePage(page: any, num: number, ref=false) {
+	if (page.ParentCampaign?.length > 0) {
+		page.ParentCampaign.forEach(async (obj: {id: string}) => {
+			const parentPage = await getPage(obj.id);
+			await updatePage(parentPage, num, true);
+		})
+	}
+
 	console.log(`[LOG] Updating ${page.id} : ${num} ${ref?': Ref':''}`);
+
 	const v = page.Visits + num;
 	const rV = page.RefVisits + num;
 	return fetch(`https://api.notion.com/v1/pages/${page.id}`, {
