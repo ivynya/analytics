@@ -1,5 +1,5 @@
 
-import { flattenResult } from "../deps.ts";
+import { flattenQuery } from "../deps.ts";
 
 const cachePath = `${Deno.cwd()}/notion/cache.json`;
 let lastUpdated = new Date(0);
@@ -18,7 +18,7 @@ export async function queryDatabase(): Promise<any[]> {
 		}
 	})).json();
 	
-	const flatRes = flattenResult(res);
+	const flatRes = flattenQuery(res);
 	await Deno.writeTextFile(cachePath, JSON.stringify(flatRes));
 	return flatRes;
 }

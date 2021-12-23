@@ -12,8 +12,8 @@ function genRefVisit(num: number, refNum: number) {
 
 export async function updatePage(page: any, num: number, ref = false) {
 	console.log(`[LOG] Updating ${page.id} : ${num} ${ref?': Ref':''}`);
-	const v = page.Visits.number + num;
-	const rV = page.RefVisits.number + num;
+	const v = page.Visits + num;
+	const rV = page.RefVisits + num;
 	return fetch(`https://api.notion.com/v1/pages/${page.id}`, {
 		body: JSON.stringify(ref ? genRefVisit(v, rV) : genVisit(v)),
 		method: "PATCH",

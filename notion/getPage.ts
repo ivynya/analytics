@@ -1,5 +1,5 @@
 
-import { flatten } from "../deps.ts";
+import { flattenPage } from "../deps.ts";
 
 export async function getPage(id: any) {
 	const res = await (await fetch(`https://api.notion.com/v1/pages/${id}`, {
@@ -10,5 +10,5 @@ export async function getPage(id: any) {
 		}
 	})).json();
 	
-	return flatten(res);
+	return flattenPage(res);
 }

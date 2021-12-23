@@ -23,10 +23,9 @@ setInterval(async () => {
 api
 	.all("/", async ctx => {
 		const campaigns = await queryDatabase();
-		const campaign = campaigns.find(c =>
-			c.CampaignID[0].content === ctx.params.id);
+		const campaign = campaigns.find(c => c.CampaignID === ctx.params.id);
 		buffer[campaign.id]++;
-		ctx.response.status = 204;
+		ctx.response.body = campaign;
 	});
 
 app.use(api.routes());
