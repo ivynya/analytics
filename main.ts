@@ -24,8 +24,14 @@ api
 	.all("/", async ctx => {
 		const campaigns = await queryDatabase();
 		const campaign = campaigns.find(c => c.CampaignID === ctx.params.id);
-		buffer[campaign.id]++;
-		ctx.response.body = campaign;
+		if (campaign) {
+			console.log(`[LOG] Post: ${campaign.CampaignID}`);
+			buffer[campaign.id]++;
+			ctx.response.body = campaign;
+		} else {
+			ctx.response.status = 404;
+			ctx.response.body = "Not found";
+		}
 	});
 
 app.use(api.routes());
