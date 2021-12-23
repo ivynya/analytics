@@ -1,13 +1,16 @@
 # analytics
 [![https://maintained.cc/SDBagel/Analytics/1](https://maintained.cc/SDBagel/Analytics/1)](https://ivy.direct/template-analytics)
 
-Self-host, Notion-integrated simple analytics API.
+Notion-integrated simple analytics API.
+
+> ⚠️ This is self-hosted. You're going to need a little bit of server knowledge and a domain if you want this running on the web.
 
 ## Setup
 1. Duplicate the Notion page and [find the database ID](https://developers.notion.com/docs/working-with-databases)
 2. [Create a new Notion integration](https://www.notion.so/my-integrations), copy the API token, and invite it to your duplicated Notion page
 3. Clone this repo and create a `.env` file with the ID and token, according to `.env.example`
 4. Run `docker build -t analytics .` and `docker run -p 8000:8000 -d analytics`
+5. Make a `POST` request to `http://localhost:8000/v1/campaign/promo1` to see it work.
 
 ## Manage from Notion
 
