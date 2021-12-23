@@ -27,7 +27,9 @@ api
 		if (campaign) {
 			console.log(`[LOG] Post: ${campaign.CampaignID}`);
 			buffer[campaign.id]++;
-			ctx.response.body = campaign;
+			if (campaign.Public.name == "True")
+				ctx.response.body = campaign;
+			else ctx.response.status = 204;
 		} else {
 			ctx.response.status = 404;
 			ctx.response.body = "Not found";
