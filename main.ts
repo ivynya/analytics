@@ -31,8 +31,8 @@ api
 				ctx.response.body = campaign;
 			else ctx.response.status = 204;
 		} else {
-			ctx.response.status = 404;
-			ctx.response.body = "Not found";
+			ctx.response.status = 400;
+			ctx.response.body = "Campaign not found";
 		}
 	});
 
