@@ -5,7 +5,7 @@ import { getPage } from "./notion/getPage.ts";
 import { updatePage } from "./notion/updatePage.ts";
 
 const app = new Application();
-const api = new Router({ prefix: "/v1/campaign/:id" });
+const api = new Router();
 
 const db = await queryDatabase();
 const buffer: { [id: string]: number } = {};
@@ -21,7 +21,8 @@ setInterval(async () => {
 }, 5000);
 
 api
-	.post("/", async ctx => {
+	.post("/v1/campaign/:id", async ctx => {
+		console.log(ctx.params.id)
 		const campaigns = await queryDatabase();
 		const campaign = campaigns.find(c => c.CampaignID === ctx.params.id);
 		if (campaign) {
