@@ -1,5 +1,5 @@
 # analytics
-[![https://maintained.cc/SDBagel/Analytics/1](https://maintained.cc/SDBagel/Analytics/1)](https://ivy.direct/template-analytics)
+[Notion page template](https://ivy.direct/template-analytics)
 
 Notion-integrated simple analytics API.
 
