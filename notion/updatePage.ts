@@ -16,7 +16,7 @@ function genRefVisit(num: number, refNum: number) {
 	};
 }
 
-export async function updatePage(page: any, num: number, ref=false) {
+export function updatePage(page: any, num: number, ref=false) {
 	if (page.ParentCampaign?.length > 0) {
 		page.ParentCampaign.forEach(async (obj: {id: string}) => {
 			const parentPage = await getPage(obj.id);
