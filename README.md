@@ -3,9 +3,14 @@
 
 Notion-integrated simple analytics API.
 
-> ⚠️ This is self-hosted. You're going to need a little bit of server knowledge and a domain if you want this running on the web.
+## Host as Deno Deploy Instance
+1. Duplicate the Notion page and [find the database ID](https://developers.notion.com/docs/working-with-databases)
+2. [Create a new Notion integration](https://www.notion.so/my-integrations), copy the API token, and invite it to your duplicated Notion page
+3. Fork this repository and create a new automatic [Deno Deploy](https://deno.com/deploy) instance using the `/deployable` branch
+4. Add the database ID and token as environment variables in the Deno Deploy instance (see `.env.example` for the keys)
+5. Make a `POST` request to `https://YOUR-SUBDOMAIN-HERE.deno.dev/v1/campaign/promo1` to see it work.
 
-## Setup
+## Host as Docker Container
 1. Duplicate the Notion page and [find the database ID](https://developers.notion.com/docs/working-with-databases)
 2. [Create a new Notion integration](https://www.notion.so/my-integrations), copy the API token, and invite it to your duplicated Notion page
 3. Clone this repo and create a `.env` file with the ID and token, according to `.env.example`
