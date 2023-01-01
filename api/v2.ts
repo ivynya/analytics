@@ -59,6 +59,15 @@ api
       ctx.response.body = "Cannot create interaction for this campaign"
       return;
     }
+    const interactionID = `${ctx.params.id}-${ctx.params.iid}`;
+    const interaction = (await queryDatabase()).find((c) => c.CampaignID === interactionID);
+    if (interaction) {
+      console.log(`[v2]: ${ctx.params.id}::${ctx.params.iid}`);
+      buffer[interactionID].interactions++;
+      ctx.response.status = 204;
+      return;
+    }
+    console.log(`[v2]: ${ctx.params.id}++${ctx.params.iid}`);
     const res = await createPage(ctx.params.iid, campaign.CampaignID, campaign.id);
     if (res.ok) ctx.response.status = 204;
     else ctx.response.status = 400;
