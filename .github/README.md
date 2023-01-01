@@ -5,9 +5,11 @@ Notion-integrated analytics API with interaction tracking. Features user-definab
 
 ## Using the Notion Template
 
-To get started, duplicate this Notion page template: [ivy.direct/template-analytics](https://ivy.direct/template-analytics)
+To get started, duplicate this Notion page template: [ivy.direct/template/analytics/v2](https://ivy.direct/template/analytics/v2)
 
-[![Notion Template](./v2_template.jpg)](https://ivy.direct/template-analytics)
+> ⚠️ The Analytics V2 template is compatible with Analytics V1 and is the recommended default. However, if you only want V1 features, you can use the old template: [ivy.direct/template/analytics/v1](https://ivy.direct/template/analytics/v1)
+
+[![Notion Template](./v2_template.jpg)](https://ivy.direct/template/analytics/v2)
 
 Do not edit or delete any of the property names as the API requires these to function. You can add additional properties for organizational purposes, or create views that hide the properties you don't need instead.
 
