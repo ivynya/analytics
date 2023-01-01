@@ -16,15 +16,38 @@ function genRefVisit(num: number, refNum: number) {
 	};
 }
 
-export function updatePage(page: any, num: number, ref=false) {
+export function updateInteractions(page: any, num: number) {
 	if (page.ParentCampaign?.length > 0) {
 		page.ParentCampaign.forEach(async (obj: {id: string}) => {
 			const parentPage = await getPage(obj.id);
-			await updatePage(parentPage, num, true);
+			await updateInteractions(parentPage, num);
 		})
 	}
 
-	console.log(`[LOG] Updating ${page.id} : ${num} ${ref?': Ref':''}`);
+  const i = page.Interactions + num;
+  return fetch(`https://api.notion.com/v1/pages/${page.id}`, {
+    body: JSON.stringify({
+      "properties": {
+        "Interactions": { "number": i },
+      },
+    }),
+    method: "PATCH",
+    headers: {
+      "Authorization": `Bearer ${Deno.env.get("NOTION_TOKEN")}`,
+      "Content-Type": "application/json",
+      "Notion-Version": "2021-08-16",
+    },
+  });
+}
+
+
+export function updateVisits(page: any, num: number, ref=false) {
+	if (page.ParentCampaign?.length > 0) {
+		page.ParentCampaign.forEach(async (obj: {id: string}) => {
+			const parentPage = await getPage(obj.id);
+			await updateVisits(parentPage, num, true);
+		})
+	}
 
 	const v = page.Visits + num;
 	const rV = page.RefVisits + num;

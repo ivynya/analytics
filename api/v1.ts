@@ -2,7 +2,7 @@
 import { Router } from "../deps.ts";
 import { getPage } from "../notion/getPage.ts";
 import { queryDatabase } from "../notion/queryDatabase.ts";
-import { updatePage } from "../notion/updatePage.ts";
+import { updateVisits } from "../notion/updatePage.ts";
 
 const db = await queryDatabase();
 const buffer: { [id: string]: number } = {};
@@ -13,7 +13,7 @@ db.forEach(page => {
 setInterval(async () => {
 	const queue = Object.keys(buffer).filter(id => buffer[id] > 0);
 	const pages = await Promise.all(queue.map(id => getPage(id)));
-	await Promise.all(pages.map(page => updatePage(page, buffer[page.id])));
+	await Promise.all(pages.map(page => updateVisits(page, buffer[page.id])));
 	Object.keys(buffer).forEach(id => buffer[id] = 0);
 }, 5000);
 
