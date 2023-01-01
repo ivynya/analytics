@@ -46,7 +46,7 @@ Do not edit or delete any of the property names as the API requires these to fun
 | `GET /v2/campaign/:CampaignID` | Gets campaign info as JSON response. | `200` or `400` if campaign not found or Public = false |
 | `POST /v2/campaign/:CampaignID` | Registers +1 Visit. If the campaign is a sub-campaign, the parent will also be updated with +1 RefVisit and +1 Visit. | `204` or `400` if campaign not found |
 | `POST /v2/campaign/:CampaignID /interact` | Registers +1 Interaction. If the campaign is a sub-campaign, the parent will also be updated with +1 Interaction. | `204` or `400` if campaign not found or Interact = Disabled |
-| `PUT /v2/campaign/:CampaignID /interact/:InteractionID` | Creates a sub-campaign for :CampaignID with default values and registers +1 interaction. If exists already, registers +1 interaction. | `204` or `400` if campaign not found |
+| `POST /v2/campaign/:CampaignID /interact/:InteractionID` | Creates a sub-campaign for :CampaignID with default values and registers +1 interaction. If exists already, registers +1 interaction. | `204` or `400` if campaign not found |
 
 After Analytics makes an edit, you can see a summary of all unread changes as a Notion update (if you follow the page, which is true by default):
 [![Notion Update](./v2_example.jpg)](https://ivy.direct/template-analytics)
