@@ -5,7 +5,7 @@ const cachePath = `${Deno.cwd()}/notion/cache.json`;
 let lastUpdated = new Date(0);
 
 export async function queryDatabase(): Promise<any[]> {
-	if (lastUpdated.getTime() + 30000 > Date.now())
+	if (lastUpdated.getTime() + 10000 > Date.now())
 		return JSON.parse(await Deno.readTextFile(cachePath));
 	else lastUpdated = new Date();
 	
