@@ -1,4 +1,5 @@
 import { Router } from "../deps.ts";
+import { createPage } from "../notion/createPage.ts";
 import { getPage } from "../notion/getPage.ts";
 import { queryDatabase } from "../notion/queryDatabase.ts";
 import { updateInteractions, updateVisits } from "../notion/updatePage.ts";
@@ -7,8 +8,10 @@ import type { Buffer } from "../schema/buffer.ts";
 const db = await queryDatabase();
 const buffer: Buffer = {};
 db.forEach((page) => {
-  buffer[page.id].visits = 0;
-  buffer[page.id].interactions = 0;
+  buffer[page.id] = {
+    visits: 0,
+    interactions: 0,
+  };
 });
 
 setInterval(() => {
@@ -49,6 +52,14 @@ api
       ctx.response.body = campaign;
     else ctx.response.status = 204;
   })
-  .post("/v2/campaign/:id/interaction/:iid", (ctx) => {
-    ctx.response.status = 501;
+  .post("/v2/campaign/:id/interaction/:iid", async (ctx) => {
+    const campaign = (await queryDatabase()).find((c) => c.CampaignID === ctx.params.id);
+    if (!campaign || campaign.Interact.name != "Dynamic") {
+      ctx.response.status = 400;
+      ctx.response.body = "Cannot create interaction for this campaign"
+      return;
+    }
+    const res = await createPage(ctx.params.iid, campaign.CampaignID, campaign.id);
+    if (res.ok) ctx.response.status = 204;
+    else ctx.response.status = 400;
   });
