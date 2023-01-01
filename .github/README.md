@@ -51,6 +51,15 @@ Do not edit or delete any of the property names as the API requires these to fun
 After Analytics makes an edit, you can see a summary of all unread changes as a Notion update (if you follow the page, which is true by default):
 [![Notion Update](./v2_example.jpg)](https://ivy.direct/template-analytics)
 
+## Suggested Usage
+I use top-level campaigns to track a project as a whole (total visits, referrals to it, and interactions on that project) in combination with my [redirect](https://github.com/ivynya/redirect) service.
+
+I create sub-campaigns for individual promotional links, referrers, or other sources of traffic to track the number of visits and interactions from that source. I also call these campaigns from certain areas of my sites to track which specific pages people visit.
+
+Finally, for items that require dynamic tracking, I use the `Interact` property to enable the API to create and use interactions on sub-campaigns. This is useful to log important micro-interactions on pages that would otherwise be a lot of clutter if they were top-level campaigns, and create campaigns automatically that I otherwise cannot do by hand.
+
+These analytics hits are typically done server-side to prevent being blocked by scripts or slowing down page loads. Because no "creepy" or personally-identifiable data (that I wouldn't be able to use anyway) like location, IP, device specifications, mouse cursor movement, etc etc is collected - only page hit numbers and interactions are - this is a great way to track user behavior without being invasive.
+
 ## Compatibility with [ivynya/redirect](https://github.com/ivynya/redirect)
 Analytics V2 remains compatible with `redirect` to track visits for dynamic redirects, managed from Notion. See the `redirect` GitHub page for setup and usage.
 
