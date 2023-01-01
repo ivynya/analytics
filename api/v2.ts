@@ -28,6 +28,15 @@ setInterval(() => {
 
 export const api = new Router();
 api
+  .get("/v2/campaign/:id", async (ctx) => {
+    const campaign = (await queryDatabase()).find((c) => c.CampaignID === ctx.params.id);
+    if (!campaign || campaign.Public.name != "True") {
+      ctx.response.status = 400;
+      ctx.response.body = "Campaign not found";
+    }
+    ctx.response.body = JSON.stringify(campaign);
+    console.log(`[v2]: GET ${ctx.params.id}`);
+  })
   .post("/v2/campaign/:id", async (ctx) => {
     const campaign = (await queryDatabase()).find((c) => c.CampaignID === ctx.params.id);
     if (!campaign) {
