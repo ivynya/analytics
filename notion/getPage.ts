@@ -1,7 +1,7 @@
 
 import { flattenPage } from "../deps.ts";
 
-export async function getPage(id: any) {
+export async function getPage(id: string) {
 	const res = await (await fetch(`https://api.notion.com/v1/pages/${id}`, {
 		method: "GET",
 		headers: {
