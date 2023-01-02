@@ -72,16 +72,34 @@ api
     const interaction = (await queryDatabase()).find((c) => c.CampaignID === interactionID);
     if (interaction) {
       console.log(`[v2]: ${ctx.params.id}::${ctx.params.iid}`);
+      if (!buffer[interaction.id]) buffer[interaction.id] = { visits: 0, interactions: 0, };
       buffer[interaction.id].interactions++;
       ctx.response.status = 204;
       return;
     }
     console.log(`[v2]: ${ctx.params.id}++${ctx.params.iid}`);
     const res = await createPage(ctx.params.iid, campaign.CampaignID, campaign.id);
-    buffer[interaction.id] = {
-      visits: 0,
-      interactions: 0,
-    };
+    if (res.ok) ctx.response.status = 204;
+    else ctx.response.status = 400;
+  })
+  .post("/v2/campaign/:id/visit/:iid", async (ctx) => {
+    const campaign = (await queryDatabase()).find((c) => c.CampaignID === ctx.params.id);
+    if (!campaign || campaign.Interact.name != "Dynamic") {
+      ctx.response.status = 400;
+      ctx.response.body = "Cannot create visit for this campaign"
+      return;
+    }
+    const interactionID = `${ctx.params.id}-${ctx.params.iid}`;
+    const interaction = (await queryDatabase()).find((c) => c.CampaignID === interactionID);
+    if (interaction) {
+      console.log(`[v2]: ${ctx.params.id}~~${ctx.params.iid}`);
+      if (!buffer[interaction.id]) buffer[interaction.id] = { visits: 0, interactions: 0, };
+      buffer[interaction.id].visits++;
+      ctx.response.status = 204;
+      return;
+    }
+    console.log(`[v2]: ${ctx.params.id}++${ctx.params.iid}`);
+    const res = await createPage(ctx.params.iid, campaign.CampaignID, campaign.id);
     if (res.ok) ctx.response.status = 204;
     else ctx.response.status = 400;
   });
