@@ -11,6 +11,5 @@ export async function queryDatabase(): Promise<any[]> {
 		}
 	})).json();
 	
-	const flatRes = flattenQuery(res);
-	return flatRes;
+	return flattenQuery(res);
 }
