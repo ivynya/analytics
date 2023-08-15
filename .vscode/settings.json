@@ -1,6 +1,6 @@
 {
-	"deno.enable": true,
-	"deno.suggest.imports.hosts": {
-		"https://deno.land": true
-	}
+	"go.toolsEnvVars": {
+		"GO111MODULE": "on"
+	},
+	"dotenv.enableAutocloaking": false
 }

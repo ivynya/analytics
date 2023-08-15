@@ -1,19 +1,20 @@
 # analytics
-Notion-integrated analytics API with interaction tracking. Features user-definable and app-controlled management of KPIs.
 
-> ⚠️ Are you an Analytics V1 user? See the [V2 migration guide](./MIGRATION.md) to see how you can preserve your existing data and make use of the new Interactions API and App-Controlled Campaigns. The V1 api will continue to function as-is.
+![https://img.shields.io/github/v/release/ivynya/analytics?label=version](https://img.shields.io/github/v/release/ivynya/analytics?label=version)
+
+Notion-integrated analytics solution with interaction tracking. Features user-definable and app-controlled management of different campaigns and KPIs by API and visually through a Notion database.
+
+> ⚠️ Are you an Analytics V1 or V2 user? See the [migration guide](./MIGRATION.md) to see how you can preserve your existing data and make use of new features and performance improvements in V3. No rush, though! V1 and V2 API endpoints are still supported and functional for now.
 
 ## Using the Notion Template
 
-To get started, duplicate this Notion page template: [ivy.direct/template/analytics/v2](https://ivy.direct/template/analytics/v2)
+To get started, duplicate this Notion page template: [ivy.direct/template/analytics/v3](https://ivy.direct/template/analytics/v3)
 
-> ⚠️ The Analytics V2 template is compatible with Analytics V1 and is the recommended default. However, if you only want V1 features, you can use the old template: [ivy.direct/template/analytics/v1](https://ivy.direct/template/analytics/v1)
-
-[![Notion Template](https://github.com/ivynya/analytics/raw/main/.github/v2_template.jpg)](https://ivy.direct/template/analytics/v2)
+[![Notion Template](./v3_template.jpg)](https://ivy.direct/template/analytics/v3)
 
 Do not edit or delete any of the property names as the API requires these to function. You can add additional properties for organizational purposes, or create views that hide the properties you don't need instead.
 
-### API V2 Property Defintions
+### V3 Notion Property Defintions
 | Property | Description |
 | --- | --- |
 | `Campaign` | A friendly name for the campaign. Can be anything. |
@@ -28,31 +29,60 @@ Do not edit or delete any of the property names as the API requires these to fun
 | `SubCampaigns` (hidden by default) | Any associated sub-campaigns. Not used by the API directly. |
 | `CreatedBy` (hidden by default) | Shows who created this campaign (you, another user, or the Analytics API) |
 
-## Hosting the API
+## Hosting the Analytics API
+1. [Create a new Notion integration](https://www.notion.so/my-integrations) with all permissions, copy the API token, and invite it to your duplicated Notion page.
+2. Pull the Docker image artifact from GitHub Container Registry
+3. Clone this repo and create a `.env` file with the ID and token, according to `.env.example`
+4. Run the Docker container and pass in the environment variables: `docker run -p 3000:3000 --env-file .env ivynya/analytics`
+5. Make a `POST` request to `http://localhost:3000/v3/campaign/portfolio-github` to see it work.
 
-### With Deno Deploy
-1. [Create a new Notion integration](https://www.notion.so/my-integrations) with all permissions, copy the API token, and invite it to your duplicated Notion page. If you don't want to use the App-Controlled Campaigns feature, you can safely leave out the Insert Content permission.
-2. Fork this repository's `/deployable` branch and create a new automatic [Deno Deploy](https://deno.com/deploy) instance from it, adding the `NOTION_TOKEN` (from your integration) and `NOTION_DB_ID` (from your duplicated Notion page's ID: see [Notion's guide on how to find this](https://developers.notion.com/docs/create-a-notion-integration#step-3-save-the-database-id)) as environment variables
-3. Make a `POST` request to `https://YOUR-SUBDOMAIN-HERE.deno.dev/v2/campaign/portfolio-github` to see it work.
+## V3 API - Endpoints
+The following API endpoints are described in the table below. Each endpoint may return one of the listed HTTP status codes in the `Returns` column, as well as the additional possibility of a `200 OK` (described by the Standard Response Protocol further below) or a `500` error if things go catastrophically wrong.
 
-### As Docker Container
-1. [Create a new Notion integration](https://www.notion.so/my-integrations) with all permissions, copy the API token, and invite it to your duplicated Notion page. If you don't want to use the App-Controlled Campaigns feature, you can safely leave out the Insert Content permission.
-2. Clone this repo and create a `.env` file with the ID and token, according to `.env.example`
-3. Run `docker build -t analytics .` and `docker run -p 8000:8000 -d analytics`
-4. Make a `POST` request to `http://localhost:8000/v2/campaign/portfolio-github` to see it work.
-5. If you don't want to build the container with your secrets, you can also use Docker environment flags to pass these values in at runtime.
-
-## API Usage
 | Endpoint | Description | Returns |
 | --- | --- | --- |
-| `GET /v2/campaign/:CampaignID` | Gets campaign info as JSON response. | `200` or `400` if campaign not found or Public = false |
-| `POST /v2/campaign/:CampaignID` | Registers +1 Visit. If the campaign is a sub-campaign, the parent will also be updated with +1 RefVisit and +1 Visit. | `204` or `400` if campaign not found |
-| `POST /v2/campaign/:CampaignID /interact` | Registers +1 Interaction. If the campaign is a sub-campaign, the parent will also be updated with +1 Interaction. | `204` or `400` if campaign not found or Interact = Disabled |
-| `POST /v2/campaign/:CampaignID /interact/:InteractionID` | Creates a sub-campaign for :CampaignID with default values. If exists already, registers +1 interaction. | `204` or `400` if campaign not found |
-| `POST /v2/campaign/:CampaignID /visit/:InteractionID` | Creates a sub-campaign for :CampaignID with default values. If exists already, registers +1 visit. | `204` or `400` if campaign not found |
+| `GET /v3/campaign/:CampaignID` | Gets campaign info as JSON response. | `200`, `204`, `400` SRP(Campaign) |
+| `POST /v3/campaign/:CampaignID` | Registers +1 Visit. If the campaign is a sub-campaign, the parent will also be updated with +1 RefVisit and +1 Visit. | `200`, `204`, `400` SRP(Campaign) |
+| `POST /v3/campaign/:CampaignID /interaction` | Registers +1 Interaction. If the campaign is a sub-campaign, the parent will also be updated with +1 Interaction. | `200`, `204`, `400` SRP(Campaign) |
+| `GET /v3/campaign/:CampaignID /interaction/:InteractionID` | Gets interaction info as JSON response. | `200`, `204`, `400` SRP(Subcampaign) |
+| `POST /v3/campaign/:CampaignID /interact/:InteractionID` | Creates a sub-campaign for :CampaignID with default values. If exists already, registers +1 interaction. | `200`, `204`, `400` SRP(Subcampaign) |
+| `POST /v3/campaign/:CampaignID /visit/:InteractionID` | Creates a sub-campaign for :CampaignID with default values. If exists already, registers +1 visit. | `200`, `204`, `400` SRP(Subcampaign) |
 
-After Analytics makes an edit, you can see a summary of all unread changes as a Notion update (if you follow the page, which is true by default):
-[![Notion Update](./v2_example.jpg)](https://ivy.direct/template-analytics)
+After Analytics makes an edit, you can see a summary of all unread changes in the Notion history for the page.
+
+## V3 API - Standard Response Protocol (SRP)
+
+The standard response protocol is a flow that describes potential responses from the API if the given Campaign or Interaction is set to `Public` = `True`or not in the Notion database.
+
+For **SRP(Campaign)** endpoints described above, if `Public` is `True` and the API request is successful, the endpoint will return a `200 OK` response with the following JSON schema describing the `Campaign` that corresponds to the `:CampaignID` called:
+
+```ts
+{
+  "ID": string // Notion ID of the campaign
+  "CampaignID": string, // User-defined ID of the campaign
+  "Visits": number, // Total visits to the campaign
+  "RefVisits": number, // Total visits to the campaign from sub-campaigns
+  "Interactions": number, // Total interactions with the campaign
+  "Public": string, // "True" or "False"
+  "Interact": "Dynamic", // "Dynamic" "Enabled" or "Disabled" - Dynamic allows API requests to create sub-campaigns to track interactions, Enabled allows API requests to track interactions, Disabled does not allow API requests to track interactions at all
+}
+``` 
+
+If the campaign is not public (`Public` = `False`), and the API request was otherwise successful, the API will return a `204 No Content` response.
+
+For **SRP(Interaction)** endpoints described in the table above, the exact same response flow and JSON schema are used - except, instead of describing `:CampaignID`, it describes the campaign object represented by `:CampaignID-:InteractionID` (`:InteractionID` subcampaign of `:CampaignID`) instead.
+
+## API Support Matrix
+
+The following table shows which Analytics release supports which API versions. Use this table to inform your decision on whether or not you can upgrade to a newer version of Analytics while still using old API versions.
+
+**❌ = Not Supported | ✅ = Supported | ⚠️ = Deprecated, Functional**
+
+| API Version | Analytics V1 | Analytics V2 | Analytics V3 |
+| --- | --- | --- | --- |
+| V1 | ✅ | ✅ | ⚠️ |
+| V2 | ❌ | ✅ | ⚠️ |
+| V3 | ❌ | ❌ | ✅ |
 
 ## Suggested Usage
 I use top-level campaigns to track a project as a whole (total visits, referrals to it, and interactions on that project) in combination with my [redirect](https://github.com/ivynya/redirect) service.
@@ -64,9 +94,11 @@ Finally, for items that require dynamic tracking, I use the `Interact` property 
 These analytics hits are typically done server-side to prevent being blocked by scripts or slowing down page loads. Because no "creepy" or personally-identifiable data (that I wouldn't be able to use anyway) like location, IP, device specifications, mouse cursor movement, etc etc is collected - only page hit numbers and interactions are - this is a great way to track user behavior without being invasive.
 
 ## Compatibility with [ivynya/redirect](https://github.com/ivynya/redirect)
-Analytics V2 remains compatible with `redirect` to track visits for dynamic redirects, managed from Notion. See the `redirect` GitHub page for setup and usage.
+Analytics V3 remains compatible with `redirect` to track visits for dynamic redirects, managed from Notion. See the `redirect` GitHub page for setup and usage.
 
 ## Licensing & Contributing
-Contributions are welcome! Please first open an issue on this repository.
+Contributions are welcome! Please first open an issue on this repository before making a pull request.
+
+To run the project locally, you need Go installed (tested on 1.20+). Create a .env file according to the .env.example and then source it into your environment. Then, run `go run ./cmd/analytics` to start the server on localhost:3000.
 
 This repository lives under MIT license.
