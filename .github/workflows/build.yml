@@ -22,5 +22,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/${{ github.repository }}/analytics:latest
+          tags: ghcr.io/${{ github.repository }}:latest
 
