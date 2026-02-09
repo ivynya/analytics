@@ -4,7 +4,7 @@ go 1.20
 
 replace github.com/ivynya/analytics/internal => ../internal
 
-require github.com/gofiber/fiber/v2 v2.52.9
+require github.com/gofiber/fiber/v2 v2.52.11
 
 require (
 	github.com/andybalholm/brotli v1.1.0 // indirect
